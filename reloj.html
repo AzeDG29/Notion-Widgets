@@ -1,0 +1,14 @@
+<div id="clock">00:00:00</div>
+<style>
+  body { background: transparent; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Inter', sans-serif; }
+  #clock { font-size: 48px; font-weight: bold; color: #333; }
+  /* Cambia el color a blanco si usas modo oscuro en Notion */
+</style>
+<script>
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').innerText = now.toLocaleTimeString();
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+</script>
