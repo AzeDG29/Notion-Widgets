@@ -1,51 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <link rel="stylesheet" href="https://unpkg.com/@pqina/flip/dist/flip.min.css">
+    <meta charset="UTF-8">
     <style>
         body {
-            background-color: #856699; /* Tu color personalizado */
+            background-color: transparent;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica;
+            font-family: 'Inter', sans-serif;
         }
 
-        .tick {
-            font-size: 5rem;
-            color: white; /* Letras blancas */
+        .clock {
+            display: flex;
+            gap: 15px;
         }
 
-        /* Ajuste del color de fondo de las tarjetas del flip */
-        .tick-flip-card-inner {
-            background-color: #333 !important; /* Color oscuro para contraste del flip */
+        .flip-card {
+            position: relative;
+            width: 120px;
+            height: 180px;
+            background-color: #856699; /* Tu color personalizado */
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 80px;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
+
+        /* Línea divisoria central */
+        .flip-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        .label {
+            position: absolute;
+            bottom: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        .am-pm { left: 10px; }
+        .day { right: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="tick" data-did-init="handleTickInit">
-        <div data-repeat="true" data-layout="horizontal center fit">
-            <span data-view="flip"></span>
+    <div class="clock">
+        <div class="flip-card">
+            <span id="hour">00</span>
+            <span class="label am-pm" id="period">PM</span>
+        </div>
+        <div class="flip-card">
+            <span id="minutes">00</span>
+            <span class="label day" id="dayname">DAY</span>
         </div>
     </div>
 
-    <script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
     <script>
-        function handleTickInit(tick) {
-            Tick.helper.interval(function() {
-                var d = new Date();
-                tick.value = {
-                    sep: ':',
-                    hours: d.getHours(),
-                    minutes: d.getMinutes(),
-                    seconds: d.getSeconds()
-                };
-            }, 1000);
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+            
+            // Convertir a formato 12 horas
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            const hourStr = String(hours).padStart(2, '0');
+
+            document.getElementById('hour').textContent = hourStr;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('period').textContent = ampm;
+            document.getElementById('dayname').textContent = days[now.getDay()];
         }
+
+        setInterval(updateClock, 1000);
+        updateClock();
     </script>
 </body>
 </html>
