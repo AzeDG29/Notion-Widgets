@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --primary-color: #856699; /* Tu color personalizado */
+            --bg-card: #ffffff;
+            --text-main: #333333;
+            --text-muted: #888888;
+        }
+
+        body {
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+
+        .calendar-card {
+            background: var(--bg-card);
+            width: 280px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .calendar-header span {
+            text-transform: capitalize;
+            font-size: 1.1em;
+        }
+
+        .days-grid {
+            padding: 15px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+
+        .day-name {
+            font-size: 0.75em;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .date {
+            font-size: 0.9em;
+            padding: 8px 0;
+            color: var(--text-main);
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .date.today {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        .date.empty { color: #eee; }
+        .date:not(.empty):hover { background: #f0ebf2; cursor: default; }
+    </style>
+</head>
+<body>
+
+    <div class="calendar-card">
+        <div class="calendar-header">
+            <div style="width: 20px"></div> <span id="month-year">Marzo 2024</span>
+            <div style="width: 20px"></div> </div>
+        <div class="days-grid" id="days-container">
+            <div class="day-name">D</div>
+            <div class="day-name">L</div>
+            <div class="day-name">M</div>
+            <div class="day-name">M</div>
+            <div class="day-name">J</div>
+            <div class="day-name">V</div>
+            <div class="day-name">S</div>
+            </div>
+    </div>
+
+    <script>
+        function generateCalendar() {
+            const now = new Date();
+            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            
+            document.getElementById('month-year').textContent = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
+
+            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+            const lastDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            const container = document.getElementById('days-container');
+
+            // Espacios en blanco para el inicio del mes
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.classList.add('date', 'empty');
+                container.appendChild(emptyDiv);
+            }
+
+            // Días del mes
+            for (let day = 1; day <= lastDate; day++) {
+                const dateDiv = document.createElement('div');
+                dateDiv.classList.add('date');
+                dateDiv.textContent = day;
+                
+                if (day === now.getDate()) {
+                    dateDiv.classList.add('today');
+                }
+                
+                container.appendChild(dateDiv);
+            }
+        }
+
+        generateCalendar();
+    </script>
+</body>
+</html>
