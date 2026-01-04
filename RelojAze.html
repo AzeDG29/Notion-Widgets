@@ -2,73 +2,131 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* CONFIGURACIÓN DE COLORES - Edita aquí fácilmente */
         :root {
-            --color-fondo-pagina: transparent; 
-            --color-bloque: #F54927;      /* Color de los rectángulos */
-            --color-texto: #ffffff;       /* Color de los números y letras */
-            --radio-borde: 8px;           /* Qué tan redondeadas son las esquinas */
+            --bg-color: #ffffff;
+            --card-color: #000000;
+            --text-color: #ffffff;
+            --accent-color: #ffffff;
         }
 
         body {
-            background-color: var(--color-fondo-pagina);
+            background-color: var(--bg-color);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            transition: background 0.3s;
         }
 
+        /* Contenedor del Reloj */
         .flip-clock {
             display: flex;
-            gap: 10px;
+            gap: 15px;
+            position: relative;
         }
 
         .card {
-            background: var(--color-bloque);
-            width: 120px;
-            height: 180px;
-            border-radius: var(--radio-borde);
+            background: var(--card-color);
+            width: 140px;
+            height: 200px;
+            border-radius: 12px;
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: var(--color-texto);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        /* Línea divisoria central */
         .card::after {
             content: '';
             position: absolute;
             top: 50%;
             left: 0;
             width: 100%;
-            height: 2px;
-            background: rgba(255,255,255,0.1);
-            z-index: 2;
+            height: 1px;
+            background: rgba(255,255,255,0.15);
         }
 
         .number {
-            font-size: 80px;
-            font-weight: 700;
-            letter-spacing: -2px;
+            font-size: 90px;
+            font-weight: 800;
+            color: var(--text-color);
         }
 
         .label {
             position: absolute;
-            bottom: 12px;
-            font-size: 12px;
-            font-weight: 800;
+            bottom: 15px;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: var(--accent-color);
             text-transform: uppercase;
         }
 
-        .am-pm { left: 12px; }
-        .day { right: 12px; }
+        .am-pm { left: 15px; }
+        .day { right: 15px; }
+
+        /* PANEL DE CONTROL (INTERACTIVO) */
+        #settings-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+            font-size: 12px;
+        }
+
+        body:hover #settings-panel { opacity: 1; }
+
+        .control-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        input[type="color"] {
+            border: none;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            background: none;
+        }
     </style>
 </head>
 <body>
+
+    <div id="settings-panel">
+        <div class="control-group">
+            <span>Fondo Página:</span>
+            <input type="color" id="bgPicker" value="#ffffff">
+        </div>
+        <div class="control-group">
+            <span>Bloques:</span>
+            <input type="color" id="cardPicker" value="#000000">
+        </div>
+        <div class="control-group">
+            <span>Números:</span>
+            <input type="color" id="textPicker" value="#ffffff">
+        </div>
+        <div class="control-group">
+            <span>Textos (Día/PM):</span>
+            <input type="color" id="accentPicker" value="#ffffff">
+        </div>
+    </div>
 
     <div class="flip-clock">
         <div class="card">
@@ -82,27 +140,37 @@
     </div>
 
     <script>
+        // Actualizar Reloj
         function updateClock() {
             const now = new Date();
-            
-            // Horas y Minutos
             let h = now.getHours();
             let m = now.getMinutes();
             let ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12 || 12;
             
-            // Convertir a formato 12h
-            h = h % 12;
-            h = h ? h : 12; 
-            
-            // Formato de dos dígitos
-            document.getElementById('hour').innerText = h < 10 ? '0' + h : h;
-            document.getElementById('minute').innerText = m < 10 ? '0' + m : m;
+            document.getElementById('hour').innerText = h.toString().padStart(2, '0');
+            document.getElementById('minute').innerText = m.toString().padStart(2, '0');
             document.getElementById('ampm').innerText = ampm;
 
-            // Día de la semana en español
             const dias = ['DOMINGO', 'LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO'];
             document.getElementById('day-name').innerText = dias[now.getDay()];
         }
+
+        // Controles de Color Interactivos
+        const root = document.documentElement;
+
+        document.getElementById('bgPicker').addEventListener('input', (e) => {
+            root.style.setProperty('--bg-color', e.target.value);
+        });
+        document.getElementById('cardPicker').addEventListener('input', (e) => {
+            root.style.setProperty('--card-color', e.target.value);
+        });
+        document.getElementById('textPicker').addEventListener('input', (e) => {
+            root.style.setProperty('--text-color', e.target.value);
+        });
+        document.getElementById('accentPicker').addEventListener('input', (e) => {
+            root.style.setProperty('--accent-color', e.target.value);
+        });
 
         setInterval(updateClock, 1000);
         updateClock();
