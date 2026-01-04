@@ -10,7 +10,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         .clock {
@@ -20,18 +20,19 @@
 
         .flip-card {
             position: relative;
-            width: 120px;
-            height: 180px;
-            background-color: #856699; /* Tu color personalizado */
-            border-radius: 10px;
+            width: 140px; /* Un poco más ancho para nombres de días largos */
+            height: 190px;
+            background-color: #856699; 
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: white;
-            font-size: 80px;
-            font-weight: bold;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            font-size: 85px;
+            font-weight: 700;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
 
         /* Línea divisoria central */
@@ -41,22 +42,23 @@
             top: 50%;
             left: 0;
             width: 100%;
-            height: 2px;
-            background: rgba(0, 0, 0, 0.3);
+            height: 3px;
+            background: rgba(0, 0, 0, 0.25);
             z-index: 2;
         }
 
         .label {
             position: absolute;
-            bottom: 10px;
-            font-size: 14px;
+            bottom: 12px;
+            font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.9;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            opacity: 0.85;
         }
 
-        .am-pm { left: 10px; }
-        .day { right: 10px; }
+        .am-pm { left: 12px; }
+        .day { right: 12px; }
     </style>
 </head>
 <body>
@@ -68,7 +70,7 @@
         </div>
         <div class="flip-card">
             <span id="minutes">00</span>
-            <span class="label day" id="dayname">DAY</span>
+            <span class="label day" id="dayname">MIÉRCOLES</span>
         </div>
     </div>
 
@@ -78,9 +80,14 @@
             let hours = now.getHours();
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const ampm = hours >= 12 ? 'PM' : 'AM';
-            const days = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'];
             
-            // Convertir a formato 12 horas
+            // Días en español
+            const dias = [
+                'DOMINGO', 'LUNES', 'MARTES', 'MIÉRCOLES', 
+                'JUEVES', 'VIERNES', 'SÁBADO'
+            ];
+            
+            // Formato 12 horas
             hours = hours % 12;
             hours = hours ? hours : 12; 
             const hourStr = String(hours).padStart(2, '0');
@@ -88,17 +95,12 @@
             document.getElementById('hour').textContent = hourStr;
             document.getElementById('minutes').textContent = minutes;
             document.getElementById('period').textContent = ampm;
-            document.getElementById('dayname').textContent = days[now.getDay()];
+            document.getElementById('dayname').textContent = dias[now.getDay()];
         }
 
+        // Actualizar cada segundo
         setInterval(updateClock, 1000);
         updateClock();
     </script>
 </body>
 </html>
-
-
-
-
-
-
